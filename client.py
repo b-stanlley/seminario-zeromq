@@ -27,9 +27,9 @@ class ClienteZeroMQ:
             print(f"[Erro ZeroMQ] {erro}")
             raise
 
-    def enviar_mensagem(self) -> None:
+    def enviar_requisicao(self, requisicao: str) -> None:
         try:
-            self.socket.send_string(self.msg)
+            self.socket.send_string(requisicao)
             resposta = self.socket.recv_string()
             print(f"Resposta do servidor: {resposta}")
         except zmq.error.ZMQError as erro:
@@ -37,8 +37,15 @@ class ClienteZeroMQ:
 
     def encerrar(self) -> None:
         self.socket.close(0)
-        
-        
+
+
+def mostrar_menu() -> None:
+    print("\n=== Menu do cliente ===")
+    print("1 - Resposta a uma mensagem de texto")
+    print("2 - Alterar um arquivo texto no servidor")
+    print("0 - Sair")
+
+
 def main() -> None:
     argumentos = ler_argumentos()
     cliente = ClienteZeroMQ(argumentos.host, argumentos.port)
@@ -47,15 +54,30 @@ def main() -> None:
         cliente.conectar_servidor()
 
         while True:
-            cliente.msg = input("Digite a mensagem ou 'sair' para encerrar a conexao: ").strip()
+            mostrar_menu()
+            opcao = input("Escolha uma opcao: ")
 
-            if cliente.msg.lower() == "sair":
-                break
-
-            if not cliente.msg:
+            try:
+                opcao_num = int(opcao)
+            except ValueError:
+                print("Opcao invalida.")
                 continue
 
-            cliente.enviar_mensagem()
+            match opcao_num:
+                case 0:
+                    break
+                case 1:
+                    mensagem = input("Digite a mensagem: ")
+
+                    if mensagem:
+                        cliente.enviar_requisicao(f"{opcao}|{mensagem}")
+                case 2:
+                    texto = input("Digite o texto para gravar no arquivo do servidor: ")
+
+                    if texto:
+                        cliente.enviar_requisicao(f"{opcao}|{texto}")
+                case _:
+                    print("Opcao invalida.")
 
     except KeyboardInterrupt:
         print("\n[Conexão encerrada]")

@@ -32,11 +32,20 @@ python server.py --host 127.0.0.1 --port 5555
 python client.py --host 127.0.0.1 --port 5555
 ```
 
-Digite uma mensagem e pressione Enter. Para sair, digite:
+O cliente exibe um menu com duas operações:
+
+- resposta a uma mensagem de texto;
+- alteração de um arquivo texto no servidor.
+
+Para sair, escolha:
 
 ```text
-sair
+0
 ```
+
+## Arquivo texto no servidor
+
+O servidor grava as alterações em [arquivo_servidor.txt](arquivo_servidor.txt).
 
 ## Observações
 
