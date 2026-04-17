@@ -2,6 +2,11 @@ import argparse
 import zmq
 
 
+OPCAO_TEXTO = 1
+OPCAO_ARQUIVO = 2
+OPCAO_CALCULO = 3
+
+
 def ler_argumentos():
     parser = argparse.ArgumentParser()
     parser.add_argument("--host", type=str, required=True)
@@ -43,6 +48,7 @@ def mostrar_menu() -> None:
     print("\n=== Menu do cliente ===")
     print("1 - Resposta a uma mensagem de texto")
     print("2 - Alterar um arquivo texto no servidor")
+    print("3 - Calcular uma funcao")
     print("0 - Sair")
 
 
@@ -70,12 +76,18 @@ def main() -> None:
                     mensagem = input("Digite a mensagem: ")
 
                     if mensagem:
-                        cliente.enviar_requisicao(f"{opcao}|{mensagem}")
+                        cliente.enviar_requisicao(f"{OPCAO_TEXTO}|{mensagem}")
                 case 2:
                     texto = input("Digite o texto para gravar no arquivo do servidor: ")
 
                     if texto:
-                        cliente.enviar_requisicao(f"{opcao}|{texto}")
+                        cliente.enviar_requisicao(f"{OPCAO_ARQUIVO}|{texto}")
+                case 3:
+                    print("\nFuncoes disponiveis: quadrado, dobro, soma, potencia, raiz")
+                    funcao = input("Digite a funcao e parametros (ex: quadrado,5): ").strip()
+
+                    if funcao:
+                        cliente.enviar_requisicao(f"{OPCAO_CALCULO}|{funcao}")
                 case _:
                     print("Opcao invalida.")
 

@@ -6,7 +6,7 @@ import zmq
 ARQUIVO_TEXTO = Path(__file__).with_name("arquivo_servidor.txt")
 OPCAO_TEXTO = 1
 OPCAO_ARQUIVO = 2
-OPCAO_FUTURA = 3
+OPCAO_CALCULO = 3
 
 
 def ler_argumentos():
@@ -44,6 +44,43 @@ class ServidorZeroMQ:
 
         return f"Arquivo atualizado com sucesso em {self.arquivo_texto.name}."
 
+    def calcular_funcoes(self, payload: str) -> str:
+        try:
+            partes = payload.split(",")
+            funcao = partes[0].strip().lower()
+
+            if funcao == "quadrado":
+                x = float(partes[1].strip())
+                resultado = x ** 2
+                return f"quadrado({x}) = {resultado}"
+
+            if funcao == "dobro":
+                x = float(partes[1].strip())
+                resultado = 2 * x
+                return f"dobro({x}) = {resultado}"
+
+            if funcao == "soma":
+                a = float(partes[1].strip())
+                b = float(partes[2].strip())
+                resultado = a + b
+                return f"soma({a}, {b}) = {resultado}"
+
+            if funcao == "potencia":
+                a = float(partes[1].strip())
+                b = float(partes[2].strip())
+                resultado = a ** b
+                return f"potencia({a}, {b}) = {resultado}"
+
+            if funcao == "raiz":
+                x = float(partes[1].strip())
+                resultado = x ** 0.5
+                return f"raiz({x}) = {resultado}"
+
+            return "[Erro] Funcao desconhecida. Use: quadrado, dobro, soma, potencia, raiz."
+
+        except (IndexError, ValueError):
+            return "[Erro] Formato invalido. Use: funcao,param1,param2,..."
+
     def processar_requisicao(self, mensagem: str) -> str:
         opcao_texto, payload = mensagem.split("|", 1)
         opcao = int(opcao_texto)
@@ -53,6 +90,8 @@ class ServidorZeroMQ:
                 return self.responder_texto(payload)
             case 2:
                 return self.alterar_arquivo_texto(payload)
+            case 3:
+                return self.calcular_funcoes(payload)
             case _:
                 return "[Erro] Opcao desconhecida."
         
