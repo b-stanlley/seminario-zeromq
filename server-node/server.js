@@ -66,14 +66,26 @@ function calcular(payload) {
             return `quadrado(${x}) = ${x * x}`;
         }
 
-        if (funcao === "raiz") {
+        else if (funcao === "raiz") {
             const x = parseFloat(partes[1]);
             return `raiz(${x}) = ${Math.sqrt(x)}`;
         }
 
-        if (funcao === "dobro") {
+        else if (funcao === "dobro") {
             const x = parseFloat(partes[1]);
             return `dobro(${x}) = ${2 * x}`;
+        }
+
+        else if (funcao === "soma") {
+            const x = parseFloat(partes[1]);
+            const y = parseFloat(partes[2]);
+            return `soma(${x}, ${y}) = ${x + y}`;
+        }
+
+        else if (funcao === "potencia") {
+            const x = parseFloat(partes[1]);
+            const y = parseFloat(partes[2]);
+            return `potencia(${x}, ${y}) = ${Math.pow(x, y)}`;
         }
 
         return "[Erro] Funcao desconhecida";
