@@ -56,6 +56,15 @@ Abra dois terminais.
 cd server-node
 node server.js
 ```
+> ⚠️ Caso ocorra erro de dependência (ex: módulo não encontrado):
+Instale manualmente a biblioteca necessária. Exemplo:
+```bash
+npm install zeromq
+```
+Em seguida, execute novamente o servidor:
+```bash
+node server.js
+```
 
 ---
 
