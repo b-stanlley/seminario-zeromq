@@ -6,11 +6,30 @@ const OPCAO_TEXTO = 1;
 const OPCAO_ARQUIVO = 2;
 const OPCAO_CALCULO = 3;
 
-async function iniciarServidor() {
-    const sock = new zmq.Reply();
-    await sock.bind("tcp://*:5555");
+function lerArgumentos() {
+    const args = process.argv.slice(2);
+    let host = "*";
+    let port = 5555;
 
-    console.log("Servidor Node.js rodando na porta 5555...");
+    for (let i = 0; i < args.length; i++) {
+        if (args[i] === "--host" && i + 1 < args.length) {
+            host = args[i + 1];
+            i++;
+        } else if (args[i] === "--port" && i + 1 < args.length) {
+            port = parseInt(args[i + 1]);
+            i++;
+        }
+    }
+
+    return { host, port };
+}
+
+async function iniciarServidor(host, port) {
+    const sock = new zmq.Reply();
+    const endpoint = `tcp://${host}:${port}`;
+    await sock.bind(endpoint);
+
+    console.log(`Servidor Node.js rodando em ${endpoint}...`);
 
     for await (const [msg] of sock) {
         const mensagem = msg.toString();
@@ -95,4 +114,5 @@ function calcular(payload) {
     }
 }
 
-iniciarServidor();
+const argumentos = lerArgumentos();
+iniciarServidor(argumentos.host, argumentos.port);
